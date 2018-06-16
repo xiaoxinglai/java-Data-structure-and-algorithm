@@ -1,4 +1,4 @@
-package Impl;
+package Node;
 
 //节点对象
 public class LNode<T> {

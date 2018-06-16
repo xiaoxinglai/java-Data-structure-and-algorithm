@@ -1,4 +1,4 @@
-package Impl;
+package Node;
 
 //静态链表的节点对象
 public class SNode<T> {

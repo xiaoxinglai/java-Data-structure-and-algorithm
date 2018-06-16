@@ -1,6 +1,7 @@
 package Impl;
 
 import IntefaceList.IList;
+import Node.SNode;
 
 /**
  * 静态链表

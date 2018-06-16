@@ -1,6 +1,7 @@
 package Impl;
 
 import IntefaceList.IList;
+import Node.LNode;
 
 //todo 链表型线性表
 public class LinkedList<T> implements IList {
@@ -12,13 +13,11 @@ public class LinkedList<T> implements IList {
     private LNode<T> cnode;
 
     //尾巴节点
+    private LNode<T> taillNode;
 
     public LNode<T> getTnode() {
         return tnode;
     }
-
-    private LNode<T> taillNode;
-
 
     @Override
     public void InitList() {
