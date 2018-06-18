@@ -110,13 +110,19 @@ public class LinkedList<T> implements IList {
 
     @Override
     public IList ListInsert(Integer i, Object e) {
-        if (i > length) {
-            return null;
-        }
-        cnode = tnode.getNext();
 
         LNode<T> newNode = new LNode<>();
         newNode.setData((T) e);
+        cnode = tnode.getNext();
+
+
+        if (i==1){
+            tnode.setNext(newNode);
+            newNode.setNext(cnode);
+            length++;
+            return this;
+        }
+
 
 
         /**
@@ -132,11 +138,7 @@ public class LinkedList<T> implements IList {
             return this;
         }
 
-        if (i == 1) {
-            newNode.setNext(cnode);
-            tnode.setNext(newNode);
-            return this;
-        }
+
 
 
         while (i > 2) {
@@ -153,31 +155,38 @@ public class LinkedList<T> implements IList {
         return this;
     }
 
+    //todo 修改后的完美删除
     @Override
     public IList ListDelete(Integer i) {
+        cnode=tnode.getNext();
+        if (cnode==null){
+            return null;
+        }
 
-        cnode = tnode.getNext();
-        /**
-         * 如果删的是尾节点
-         */
-        if (i.equals(this.length)) {
-
-            for (i = 1; i < this.length; i++) {
-                cnode = cnode.getNext();
-            }
-            taillNode = cnode;
-            cnode.setNext(null);
-            this.length--;
+        int j=2;
+        if (i==1){
+            tnode.setNext(cnode.getNext());
+            length--;
             return this;
         }
 
-        while (i - 1 > 0) {
-            cnode = cnode.getNext();
-            i--;
+        while (cnode.getNext()!=null){
+            if (i==j){
+                cnode.setNext(cnode.getNext().getNext());
+                length--;
+                return this;
+            }
+            j++;
+            cnode=cnode.getNext();
         }
-        cnode.setNext(cnode.getNext().getNext());
-        length--;
-        return this;
+
+        if (i==j){
+            cnode.setNext(null);
+            length--;
+            taillNode=cnode;
+        }
+
+        return null;
     }
 
     @Override
@@ -280,14 +289,10 @@ public class LinkedList<T> implements IList {
      * 链表的逆置   就是每插入一个 都是在尾部往前插入
      */
     public void Reversal() {
-
-
         cnode = tnode.getNext();
         if (cnode.getNext() == null) {
             return;
         }
-
-
         //第一个节点
         LNode<T> firstNode = new LNode<>();
 
@@ -308,6 +313,10 @@ public class LinkedList<T> implements IList {
 
 
     }
+
+
+
+
 
 
     /**
