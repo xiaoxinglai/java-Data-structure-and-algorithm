@@ -70,7 +70,11 @@ public class stack<T> {
      * 查看栈顶元素
      */
     public T getTop() {
-        return list[top-1];
+        if (!StackEmpty()){
+            return list[top-1];
+        }else {
+            return null;
+        }
     }
 
     /**
@@ -114,7 +118,7 @@ public class stack<T> {
         for (int i = 0; i <this.size ; i++) {
             list[i]=this.list[i];
         }
-
+        this.list=list;
         return;
     }
 
@@ -122,9 +126,8 @@ public class stack<T> {
      * 遍历栈
      */
     public void print(){
-
-        for ( int temp=top-1;temp>=0; temp--) {
-            System.out.print(this.list[temp]);
+        while(getTop()!=null){
+            System.out.print(Pop());
         }
         System.out.println();
     }
