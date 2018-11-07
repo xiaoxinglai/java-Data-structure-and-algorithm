@@ -1,6 +1,6 @@
 package stack.demo;
 
-import stack.stack;
+import stack.Stack;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,24 +20,24 @@ import java.util.List;
  */
 public class LineEdit {
     public static void main(String[] args) throws IOException {
-        stack stack = new stack();
-        stack.InitStack();
+        Stack Stack = new Stack();
+        Stack.InitStack();
 
         try {
             char ch = (char) System.in.read();
             while (ch != '\n') {
                 if (ch == '#') {
-                    stack.Pop();
+                    Stack.Pop();
                 } else if (ch == '@') {
-                    stack.ClearStack();
+                    Stack.ClearStack();
                 } else {
-                    stack.push(ch);
+                    Stack.push(ch);
                 }
                 ch = (char) System.in.read();
             }
             List<Character> list=new ArrayList<>();
-            while(stack.getTop()!=null){
-                list.add((Character)stack.Pop());
+            while(Stack.getTop()!=null){
+                list.add((Character) Stack.Pop());
             }
             for (int i = 0; i < list.size(); i++) {
                 System.out.print(list.get(list.size()-1-i));

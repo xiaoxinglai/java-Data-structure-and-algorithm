@@ -12,19 +12,22 @@ public class testObejct {
         demo demoA=new demo();
         demoA.setDate(1);
 
+        demo demoA1=demoA;
+
         demo demoB=new demo();
 
         demoB.setDate(2);
-        System.out.println("A:"+demoA.getDate()+"B: "+demoB.getDate()); // A 1  B 2
+        System.out.println("A: "+demoA.getDate()+"  B: "+demoB.getDate()); // A 1  B 2
 
 
         demoA =demoB;
         demoB.setDate(999);
 
-        System.out.println("A:"+demoA.getDate()+"B: "+demoB.getDate()); // A 999  B 999
+        System.out.println("A: "+demoA.getDate()+"B: "+demoB.getDate()); // A 999  B 999
+        // 但是事实此时demoA和demoB都表示同一个对象, 原来的demoA被没有被改变
+        System.out.println("demoA与demoB的地址是否相等："+String.valueOf(demoA==demoB));
 
-
-
+        System.out.println("原来demoA的值仍没有变化"+demoA1.getDate());
 
  }
 

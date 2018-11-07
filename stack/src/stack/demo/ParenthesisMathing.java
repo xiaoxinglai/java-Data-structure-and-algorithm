@@ -1,5 +1,5 @@
 package stack.demo;
-import stack.stack;
+import stack.Stack;
 /**
  * 栈的应用之括号匹配的检验
  * 输入一系列括号 返回是否匹配
@@ -27,18 +27,18 @@ public class ParenthesisMathing {
     }
 
     static String Juge(char[] demo){
-        stack stack=new stack();
-        stack.InitStack();
+        Stack Stack =new Stack();
+        Stack.InitStack();
         for (int i = 0; i <demo.length; i++) {
             if (demo[i]=='('||demo[i]=='['){
-                stack.push(demo[i]);
+                Stack.push(demo[i]);
             }
 
             if (demo[i]==')'||demo[i]==']'){
-                if ((char)stack.getTop()=='('&&demo[i]==')'){
-                    stack.Pop();
-                }else if ((char)stack.getTop()=='['&&demo[i]==']'){
-                    stack.Pop();
+                if ((char) Stack.getTop()=='('&&demo[i]==')'){
+                    Stack.Pop();
+                }else if ((char) Stack.getTop()=='['&&demo[i]==']'){
+                    Stack.Pop();
                 }else {
                     return "匹配失败";
                 }

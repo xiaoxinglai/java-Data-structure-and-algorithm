@@ -1,20 +1,20 @@
 package test;
 
-import stack.stack;
+import stack.Stack;
 
 public class Stacktest {
     public static void main(String[] args) {
-        stack<Integer> stack=new stack();
-        stack.InitStack();
-        stack.push(1);
-        stack.push(2);
-        stack.push(3);
-        stack.print();
-        System.out.println(stack.Pop());
+        Stack<Integer> Stack =new Stack();
+        Stack.InitStack();
+        Stack.push(1);
+        Stack.push(2);
+        Stack.push(3);
+        Stack.print();
+        System.out.println(Stack.Pop());
 
-        int size=stack.StackLength();
+        int size= Stack.StackLength();
         for (int i = 0; i < size; i++) {
-            System.out.println(stack.Pop());
+            System.out.println(Stack.Pop());
         }
 
 

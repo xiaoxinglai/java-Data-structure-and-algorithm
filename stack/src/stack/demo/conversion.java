@@ -1,5 +1,5 @@
 package stack.demo;
-import stack.stack;
+import stack.Stack;
 /**
  * 栈的应用之数制转换
  * 1.十进制数N和其他d进制数的转换
@@ -31,14 +31,14 @@ public class conversion {
 
     public static void main(String[] args) {
         Integer N=1348;
-         stack stack=new stack();
-        stack.InitStack();
+         Stack Stack =new Stack();
+        Stack.InitStack();
         while (N!=0){
-            stack.push(N%8);
+            Stack.push(N%8);
             N=N/8;
         }
-        while (!stack.StackEmpty()){
-            System.out.print(stack.Pop());
+        while (!Stack.StackEmpty()){
+            System.out.print(Stack.Pop());
         }
     }
 }
