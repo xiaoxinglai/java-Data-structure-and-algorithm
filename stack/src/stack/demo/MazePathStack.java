@@ -1,5 +1,7 @@
 package stack.demo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -50,7 +52,10 @@ public class MazePathStack {
 
                 //判断该坐标是否是终点
                 if (isEnd(spath)) {
+                    spathStack.push(spath);
                     System.out.println("到达终点，坐标为:" + "(" + spath.x + "," + spath.y + ")");
+                    System.out.println("路径为");
+                    printAll();
                     return;
                 }
 
@@ -74,6 +79,17 @@ public class MazePathStack {
         } while (!spathStack.empty());
 
 
+    }
+
+    private static void printAll() {
+        //打印路径
+        List<Spath> spaths=new ArrayList<>();
+        while(!spathStack.empty()){
+            spaths.add(spathStack.pop());
+        }
+        for (int i = spaths.size()-1; i >=0 ; i--) {
+            System.out.println("("+spaths.get(i).x+","+spaths.get(i).y+")");
+        }
     }
 
 
