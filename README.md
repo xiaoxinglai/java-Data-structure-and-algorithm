@@ -1,11 +1,11 @@
-
 [TOC]
 
-#### java-Data-structure-and-algorithm
-#### java数据结构和算法实现练习
 
-### `list`线性表
-* 线性表接口
+#java-Data-structure-and-algorithm
+#java数据结构和算法实现练习
+
+##`list`线性表
+### 线性表接口
 ```
 package IntefaceList;
 
@@ -87,7 +87,7 @@ public interface IList<T> {
 }
 
 ```
-* 数组型线性表实现
+#### 数组型线性表实现
 ```$xslt
 package Impl;
 import IntefaceList.IList;
@@ -314,9 +314,9 @@ public class SequenceList<T> implements IList {
 
 ***
 
-* 链表型线性表的实现
+####链表型线性表的实现
 
->头节点
+#####头节点
 
 ```
 package Node;
@@ -346,7 +346,7 @@ public class LNode<T> {
 }
 
 ```
->链表
+#####链表
 
 ```$xslt
 package Impl;
@@ -672,9 +672,9 @@ public class LinkedList<T> implements IList {
 
 ***
 
-* 静态链表的实现
+#### 静态链表的实现
 
->节点
+#####节点
 ```$xslt
 
 package Node;
@@ -707,7 +707,7 @@ public class SNode<T> {
 }
 
 ```
->静态链表
+#####静态链表
 ```$xslt
 package Impl;
 
@@ -933,9 +933,9 @@ public class StaticLinkedLIst<T> implements IList {
 
 *** 
 
-* 双向链表的实现
+####双向链表的实现
 
->头节点
+#####头节点
 ```$xslt
 package Node;
 
@@ -973,7 +973,7 @@ public class DuLNode<T> {
 }
 
 ```
->双向链表
+#####双向链表
 ```$xslt
 
 package Impl;
@@ -1174,7 +1174,7 @@ public class DuLinkedList implements IList {
 
 ```
 
-* 循环链表的实现
+####循环链表的实现
 
 ```$xslt
 package Impl;
@@ -1359,12 +1359,12 @@ public class CircLinkedList<T> implements IList {
 
 }
 ```
-* 链表的应用之一元多项式相加
+###链表的应用之一元多项式相加
 
 
 
-### `stack`栈
-  * 栈应用之行编辑器  
+## `stack`栈
+  ### 栈应用之行编辑器  
   '#'表示退格 '@'表示退行  
   比如  whli##ilr#e（s#*s）  
   outcha@putchar(*s=#++)    
@@ -1417,7 +1417,7 @@ while(*s)
 
 ***
 
-* 迷宫求解
+###迷宫求解
 ```
 package stack.demo;
 
@@ -1630,7 +1630,7 @@ public class MazePathStack {
 
 
 ***
-* 表达式求值
+### 表达式求值
 ```
 package stack.demo;
 
@@ -1793,7 +1793,7 @@ public class EvaluateExpression {
 2.循环的退出条件 直到运算全部结束，即当前栈顶元素和读入的操作符均为#*
 
 ***
-* 汉诺塔问题
+### 汉诺塔问题
 ```
 package stack.demo;
 
@@ -1875,6 +1875,6 @@ ps:汉诺塔问题的数学递归式子得到的时间复杂度为
 
 ***
 
-### `tree`  树
-### `diagram` 图
-### `sorting` 排序查找
+## `tree`  树
+## `diagram` 图
+## `sorting` 排序查找
