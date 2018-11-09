@@ -7,10 +7,6 @@ public class LNode<T> {
     //下一个节点
     private  LNode<T> next;
 
-
-
-
-
     public T getData() {
         return data;
     }
@@ -26,6 +22,4 @@ public class LNode<T> {
     public void setNext(LNode<T> next) {
         this.next = next;
     }
-
-
 }

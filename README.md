@@ -1,7 +1,1366 @@
 #### java-Data-structure-and-algorithm
 #### java数据结构和算法实现练习
 
-### `list`  线性表
+### `list`线性表
+* 线性表接口
+```
+package IntefaceList;
+
+public interface IList<T> {
+
+    /**
+     * 构造一个空的线性表 进行初始化
+     */
+    void InitList();
+
+    /**
+     * 销毁线性表
+     */
+    IList DestroyList();
+
+    /**
+     * 将线性表重置为空表
+     */
+    IList ClearList();
+
+    /**
+     * 判断线性表是否为空
+     */
+    Boolean ListEmpty();
+
+    /**
+     * 返回线性表中元素的个数
+     */
+    Integer ListLength();
+
+    /**
+     * 获取线性表中第i个元素
+     */
+    T GetElem(Integer i);
+
+    /**
+     * 根据元素获取它的位序，如果有多个符合，则返回第一个，如果没有则返回0
+     */
+    Integer LocateElem(T e);
+
+    /**
+     * 获取该元素的上一个元素
+     */
+    T PriorElem(T e);
+    /**
+     *获取该元素的下一个元素
+     */
+    T NextElem(T e);
+    /**
+     * 在指定位置插入元素
+     */
+    IList ListInsert(Integer i, T e);
+
+    /**
+     *删除指定位置的元素
+     */
+    IList ListDelete(Integer i);
+
+    /**
+     * 遍历所有的元素
+     */
+    void  ListTraverse();
+
+    /**
+     * 合并两个线性表 合并不重复的元素
+     */
+    IList Union(IList list);
+
+    /**
+     * 按照递增顺序合并两个线性表
+     */
+    IList MergeList(IList list);
+
+    /**
+     * 在尾部新增元素
+     */
+    void add(T e);
+
+}
+
+```
+* 数组型线性表实现
+```$xslt
+package Impl;
+import IntefaceList.IList;
+public class SequenceList<T> implements IList {
+
+
+    private T[] arr;
+
+    //数组当前容量(里面实际包含的元素个素)
+    private Integer size = 0;
+    //数组当前大小
+    private Integer Length = 4;
+
+
+    @Override
+    public void InitList() {
+
+        this.arr = (T[]) new Object[Length];
+    }
+
+    @Override
+    public IList DestroyList() {
+        arr = null;
+        size=0;
+        return this;  //这里应该直接让list对象为null
+    }
+
+    @Override
+    public IList ClearList() {
+        this.arr = (T[]) new Object[Length];
+        size=0;
+        return this;
+    }
+
+    @Override
+    public Boolean ListEmpty() {
+        if (size > 0) {
+            return Boolean.TRUE;
+        } else {
+            return Boolean.FALSE;
+        }
+    }
+
+    @Override
+    public Integer ListLength() {
+        return size;
+    }
+
+    @Override
+    public Object GetElem(Integer i) {
+        if (i > size) {
+            return null;
+        }
+        return arr[i - 1];
+    }
+
+    @Override
+    public Integer LocateElem(Object e) {
+
+        for (int i = 0; i < arr.length; i++) {
+            if (e.equals(arr[i])) {
+                return i + 1;
+            }
+        }
+
+        return -1;
+    }
+
+    @Override
+    public Object PriorElem(Object e) {
+        for (int i = 0; i < arr.length; i++) {
+            if (e.equals(arr[i])) {
+                return arr[i - 1];
+            }
+        }
+
+        return -1;
+    }
+
+    @Override
+    public Object NextElem(Object e) {
+        for (int i = 0; i < arr.length; i++) {
+            if (e.equals(arr[i])) {
+                return arr[i + 1];
+            }
+        }
+
+        return -1;
+    }
+
+    @Override
+    public IList ListInsert(Integer i, Object e) {
+        if (i>size){
+            return null;
+        }
+
+        size++;
+        addsize();
+        for (int j = i-1; j <this.size; j++) {
+            arr[size-j]=arr[size-j-1];
+            
+        }
+        arr[i - 1] = (T) e;
+        return this;
+    }
+
+    @Override
+    public IList ListDelete(Integer i) {
+        size--;
+        for (int i1 = i - 1; i1 + 1 < arr.length; i1++) {
+            arr[i1] = arr[i1 + 1];
+        }
+        return this;
+    }
+
+    @Override
+    public void ListTraverse() {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] != null) {
+                System.out.print(arr[i]);
+                System.out.print(",");
+            }
+        }
+        System.out.println();
+    }
+
+    /**
+     * 合并不重复的元素
+     *
+     * @param list
+     * @return
+     */
+    @Override
+    public IList Union(IList list) {
+
+        for (int i = 1; i <= list.ListLength(); i++) {
+            if (this.LocateElem(list.GetElem(i)) == -1) {
+                this.add(list.GetElem(i));
+            }
+        }
+
+        return this;
+    }
+
+    /**
+     * 合并两个列表 从小到大
+     *
+     * @param list
+     * @return
+     */
+    @Override
+    public IList MergeList(IList list) {
+
+        //已知两个表都是递增的顺序
+        //借助新的第三张表
+        T[] NewArr = (T[]) new Object[Length + list.ListLength()];
+        int pa = 1;
+        int pb = 1;
+        int pc = 0;
+        while (pa <= list.ListLength() && pb <= this.ListLength()) {
+            if ((int) list.GetElem(pa) <= (int) this.GetElem(pb)) {
+                NewArr[pc] = (T) list.GetElem(pa);
+                pc++;
+                pa++;
+            } else {
+                NewArr[pc] = (T) this.GetElem(pb);
+                pc++;
+                pb++;
+            }
+
+        }
+
+
+        while (pa<=list.ListLength()){
+
+            NewArr[pc] = (T) list.GetElem(pa);
+            pc++;
+            pa++;
+        }
+
+
+        while (pb<=this.ListLength()){
+            NewArr[pc] = (T) this.GetElem(pb);
+            pc++;
+            pb++;
+
+        }
+
+        this.arr=NewArr;
+
+        size=size+ list.ListLength();
+
+        return this;
+    }
+
+    @Override
+    public void add(Object e) {
+        arr[size] = (T) e;
+        size++;
+        addsize();
+    }
+
+    /**
+     * 数组扩容
+     */
+    private void addsize() {
+        if (size / (float) arr.length > 0.75) {
+            Length = (int) (size * 1.5);
+            T[] Newarr = (T[]) new Object[(Length)];
+
+            for (int a = 0; a < arr.length; a++) {
+                Newarr[a] = arr[a];
+            }
+
+            this.arr = Newarr;
+        }
+    }
+}
+/*
+* 可以看出来，数组型的列表，时间都花在插入和删除上了，平均每次插入或者删除一个元素，需要移动一半的元素（根据期望值算出）
+* 优点是取元素快，只要知道坐标 就可以
+* */
+```
+
+***
+
+* 链表型线性表的实现
+
+>头节点
+
+```
+package Node;
+
+//节点对象
+public class LNode<T> {
+    //数据
+    private T data;
+    //下一个节点
+    private  LNode<T> next;
+    
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public LNode<T> getNext() {
+        return next;
+    }
+
+    public void setNext(LNode<T> next) {
+        this.next = next;
+    }
+}
+
+```
+>链表
+
+```$xslt
+package Impl;
+
+import IntefaceList.IList;
+import Node.LNode;
+
+public class LinkedList<T> implements IList {
+
+    //头节点
+    private LNode<T> tnode;
+    private Integer length = 0;
+    //当前节点
+    private LNode<T> cnode;
+
+    //尾巴节点
+    private LNode<T> taillNode;
+
+    public LNode<T> getTnode() {
+        return tnode;
+    }
+
+    @Override
+    public void InitList() {
+        tnode = new LNode<>(); //初始化头节点
+        taillNode = tnode;
+    }
+
+    @Override
+    public IList DestroyList() {
+
+        tnode.setNext(null);
+        length = 0;  //这里应该整个list对象为null 但java没有析构函数
+        taillNode = tnode;
+        return this;
+    }
+
+    @Override
+    public IList ClearList() {
+        cnode = tnode.getNext();
+        while (cnode.getNext() != null) {
+            cnode = cnode.getNext();
+            cnode.setData(null);
+            length--;
+        }
+        taillNode = tnode;
+        return this;
+    }
+
+    @Override
+    public Boolean ListEmpty() {
+        if (length != 0) {
+            return Boolean.FALSE;
+        } else {
+            return Boolean.TRUE;
+        }
+    }
+
+    @Override
+    public Integer ListLength() {
+        return this.length;
+    }
+
+    @Override
+    public Object GetElem(Integer i) {
+        cnode = tnode.getNext();
+        while (i - 1 > 0) {
+            cnode = cnode.getNext();
+            i--;
+        }
+        return cnode.getData();
+    }
+
+    @Override
+    public Integer LocateElem(Object e) {
+        cnode = tnode.getNext();
+        int i = 1;
+        while (cnode != null && !e.equals(cnode.getData())) {
+            i++;
+            cnode = cnode.getNext();
+        }
+        if (cnode == null) {
+            return -1;
+        }
+        return i;
+    }
+
+    @Override
+    public Object PriorElem(Object e) {
+        cnode = tnode.getNext();
+
+        LNode<T> pnode = null;
+
+        while (!e.equals(cnode.getData())) {
+            pnode = cnode; //上一个节点
+            cnode = cnode.getNext();
+        }
+        return pnode.getData();
+
+    }
+
+    @Override
+    public Object NextElem(Object e) {
+        cnode = tnode.getNext();
+        while (!e.equals(cnode.getData())) {
+            cnode = cnode.getNext();
+        }
+        return cnode.getNext().getData();
+
+    }
+
+    @Override
+    public IList ListInsert(Integer i, Object e) {
+
+        LNode<T> newNode = new LNode<>();
+        newNode.setData((T) e);
+        cnode = tnode.getNext();
+
+
+        if (i==1){
+            tnode.setNext(newNode);
+            newNode.setNext(cnode);
+            length++;
+            return this;
+        }
+
+
+
+        /**
+         * 在最后一位插入
+         */
+        if (i.equals(this.length)) {
+
+            newNode.setNext(null);
+            newNode.setData(taillNode.getData());
+            taillNode.setData((T) e);
+            taillNode.setNext(newNode);
+            taillNode = newNode;
+            return this;
+        }
+
+
+
+
+        while (i > 2) {
+            cnode = cnode.getNext();
+            i--;
+        }
+
+        newNode.setNext(cnode.getNext());
+        cnode.setNext(newNode);
+
+        length++;
+
+
+        return this;
+    }
+
+    //todo 修改后的完美删除
+    @Override
+    public IList ListDelete(Integer i) {
+        cnode=tnode.getNext();
+        if (cnode==null){
+            return null;
+        }
+
+        int j=2;
+        if (i==1){
+            tnode.setNext(cnode.getNext());
+            length--;
+            return this;
+        }
+
+        while (cnode.getNext()!=null){
+            if (i==j){
+                cnode.setNext(cnode.getNext().getNext());
+                length--;
+                return this;
+            }
+            j++;
+            cnode=cnode.getNext();
+        }
+
+        if (i==j){
+            cnode.setNext(null);
+            length--;
+            taillNode=cnode;
+        }
+
+        return null;
+    }
+
+    @Override
+    public void ListTraverse() {
+        cnode = tnode.getNext();
+        while (cnode.getNext() != null) {
+            if (cnode.getData() != null) {
+                System.out.print(cnode.getData() + ",");
+            }
+            cnode = cnode.getNext();
+        }
+        System.out.print(cnode.getData() + ",");
+        System.out.println();
+
+    }
+
+    /**
+     * 合并两个线性表中不重复的元素
+     *
+     * @param list
+     * @return
+     */
+    @Override
+    public IList Union(IList list) {
+        for (int i = 1; i <= list.ListLength(); i++) {
+            if ((this.LocateElem(list.GetElem(i))) == -1) {
+
+                LNode<T> newNode = new LNode<>();
+                taillNode.setNext(newNode);
+                newNode.setData((T) list.GetElem(i));
+                newNode.setNext(null);
+                taillNode = newNode;
+                this.length++;
+            }
+        }
+
+        return this;
+    }
+
+    @Override
+    public IList MergeList(IList list) {
+        LinkedList<T> LB = (LinkedList<T>) list;
+        //在已知道两个列表都是非递减序列的情况下合并
+        //要求合并之后还是非递减序列
+        //两个链表归并 要想不和数组型线性表一样借助第三个表实现 就得用到指针 知道节点的位置
+        LNode<T> pb = LB.getTnode().getNext();
+        LNode<T> pa = this.getTnode().getNext();
+        cnode = tnode;  //当前节点
+        this.length = this.length + list.ListLength();
+
+        while (pa != null && pb != null) {
+            if ((Integer) pa.getData() <= (Integer) pb.getData()) {
+                cnode.setNext(pa);
+                cnode = pa;
+                pa = pa.getNext();
+            } else {
+                cnode.setNext(pb);
+                cnode = pb;
+                pb = pb.getNext();
+            }
+
+        }
+
+        if (pa == null) {
+            cnode.setNext(pb);
+        } else {
+            cnode.setNext(pa);
+        }
+
+        return list;
+    }
+
+    @Override
+    public void add(Object e) {
+        cnode = tnode.getNext();
+
+        LNode<T> newNode = new LNode<>();
+        newNode.setNext(null);
+        newNode.setData((T) e);
+
+        if (cnode != null) {
+            while (cnode.getNext() != null) {
+                cnode = cnode.getNext();
+            }
+
+            cnode.setNext(newNode);
+
+        } else {
+            tnode.setNext(newNode);
+        }
+        taillNode = newNode;
+
+        this.length++;
+
+
+    }
+
+
+    /**
+     * 链表的逆置   就是每插入一个 都是在尾部往前插入
+     */
+    public void Reversal() {
+        cnode = tnode.getNext();
+        if (cnode.getNext() == null) {
+            return;
+        }
+        //第一个节点
+        LNode<T> firstNode = new LNode<>();
+
+        firstNode.setNext(null);
+        firstNode.setData(cnode.getData());
+        tnode.setNext(firstNode);
+
+        cnode = cnode.getNext();
+
+        while (cnode != null) {   //因为最后一个节点的next是null
+
+            LNode<T> newNode = new LNode<>();
+            newNode.setData(cnode.getData());
+            newNode.setNext(tnode.getNext());
+            tnode.setNext(newNode);
+            cnode = cnode.getNext();
+        }
+
+
+    }
+    /**
+     * 尾节点的好处  可以更快的找到尾部节点  缺点就是增加了代码的复杂度  需要在插入和删除时候对尾节点进行维护
+     */
+}
+
+```
+
+***
+
+* 静态链表的实现
+
+>节点
+```$xslt
+
+package Node;
+
+//静态链表的节点对象
+public class SNode<T> {
+    //数据
+    private  T date;
+    //游标
+    private  int cur;
+
+    public SNode() {
+    }
+
+    public T getDate() {
+        return date;
+    }
+
+    public void setDate(T date) {
+        this.date = date;
+    }
+
+    public int getCur() {
+        return cur;
+    }
+
+    public void setCur(int cur) {
+        this.cur = cur;
+    }
+}
+
+```
+>静态链表
+```$xslt
+package Impl;
+
+import IntefaceList.IList;
+import Node.SNode;
+
+/**
+ * 静态链表
+ * 借用一维数组来描述线性链表
+ * 这种描述方法便于在不设指针类型的高级程序设计语言中使用链表结构
+ * 数组的一个分量表示一个节点，第0个分量看作是头节点  游标代替指针指示节点在数组中的位置
+ * <p>
+ * 与数组型线性表的区别
+ * 1.有节点 每个节点包含 date 和 next游标
+ * 2.需要自己实现malloc和free函数
+ * 思路：将所有未被使用的数组元分量以及被删除的分量用游标链成一个备用的链表，每当进行插入时 从备用链表中取第一个节点
+ * 作为待插入的新节点，在删除的时候将从链表中删除下来的节点链接到备用链表上
+ */
+public class StaticLinkedLIst<T> implements IList {
+    //链表的最大长度
+    private final Integer MAXSIZE = 100;
+
+    //数组空间   备用链表和正在使用的链表都在同一个数组里面
+    private SNode<T>[] SList = new SNode[MAXSIZE];
+
+    //指向当前正在使用的链表的头节点的游标
+    private int curr = 0;
+
+
+    @Override
+    public void InitList() {
+        //将数组各分量链接成一个备用链表 SList[0].cur为头指针
+        //0表示空指针
+        for (int i = 0; i < MAXSIZE - 1; i++) {
+            SList[i] = new SNode();
+            SList[i].setCur(i + 1);
+        }
+        SList[MAXSIZE - 1] = new SNode();
+        SList[MAXSIZE - 1].setCur(0);
+    }
+
+
+    //malloc函数 分配空间
+    public int Malloc() {
+        //从备用链表中取出一个元素 并返回该元素的游标
+
+        int i = SList[0].getCur();
+        if (i != 0) {
+            SList[0].setCur(SList[i].getCur());
+        }
+
+        return i;
+    }
+
+    //free函数  释放空间
+    public void Free(int k) {
+        // 将下标为k的节点回收到备用链表中
+        //备用链表的头节点 SList[0]
+        SList[k].setCur(SList[0].getCur());
+        SList[0].setCur(k);
+    }
+
+    @Override
+    public IList DestroyList() {
+        return null;
+    }
+
+    @Override
+    public IList ClearList() {
+        return null;
+    }
+
+    @Override
+    public Boolean ListEmpty() {
+        return null;
+    }
+
+    @Override
+    public Integer ListLength() {
+        return null;
+    }
+
+    @Override
+    public Object GetElem(Integer i) {
+        int k = SList[curr].getCur();
+
+        for (int j = 1; j < i; j++) {
+            k = SList[k].getCur();
+        }
+        return SList[k].getDate();
+    }
+
+    @Override
+    public Integer LocateElem(Object e) {
+        //获取第一个节点的下标  0表示最后一个节点的next游标的值
+        int i = SList[curr].getCur();
+        while (i != 0 && !e.equals(SList[i].getDate())) {
+            i = SList[i].getCur();
+        }
+//返回的是该节点所在的下标
+        return i;
+    }
+
+
+    @Override
+    public Object PriorElem(Object e) {
+        return null;
+    }
+
+    @Override
+    public Object NextElem(Object e) {
+        return null;
+    }
+
+    @Override
+    public IList ListInsert(Integer i, Object e) {
+        return null;
+    }
+
+    @Override
+    public IList ListDelete(Integer i) {
+        if (i == 0 || i == 1) {
+            return null;
+
+        }
+        int k=curr;
+        while (!i.equals(SList[k].getCur())){
+            k=SList[k].getCur();
+        }
+        SList[k].setCur(SList[i].getCur());
+        Free(i);
+
+        return this;
+    }
+
+    @Override
+    public void ListTraverse() {
+        if (curr == 0) {
+            return;
+        }
+        int k = SList[curr].getCur();
+        while (SList[k].getCur() != 0) {
+            System.out.print(SList[k].getDate() + ",");
+            k = SList[k].getCur();
+        }
+        System.out.print(SList[k].getDate() + ",");
+        System.out.println();
+
+    }
+
+    @Override
+    public IList Union(IList list) {
+        return null;
+    }
+
+
+    /**
+     * 计算集合(A-B)U(B-A)之后的值
+     * 其实就是合并 并把两个集合共有的元素都删掉
+     *
+     * @param list
+     * @return
+     */
+    public void Differnce(IList list) {
+
+        int a=curr;
+
+        while (SList[a].getCur()!=0) {
+
+            a=SList[a].getCur();
+            T e = SList[a].getDate();
+
+            if (list.LocateElem(e) != 0){
+                list.ListDelete(list.LocateElem(e));
+            }else {
+                list.add(e);
+            }
+
+
+        }
+
+
+    }
+
+
+    @Override
+    public IList MergeList(IList list) {
+
+        return null;
+    }
+
+    @Override
+    public void add(Object e) {
+
+        //从备用链表里取出一个可以用的位置
+        int i = Malloc();
+
+        //如果没有头节点则 初始化头节点
+        if (curr == 0) {
+            int j = Malloc();
+            SList[j].setDate((T) e);
+            SList[j].setCur(0);
+            curr = i;
+            SList[curr].setCur(j);
+            return;
+        }
+
+        int k = SList[curr].getCur();
+        while (SList[k].getCur() != 0) {
+            k = SList[k].getCur();
+        }
+
+        SList[i].setDate((T) e);
+        SList[i].setCur(0);
+        SList[k].setCur(i);
+
+        return;
+    }
+}
+
+
+```
+
+*** 
+
+* 双向链表的实现
+
+>头节点
+```$xslt
+package Node;
+
+//双向链表的头节点
+public class DuLNode<T> {
+    private T date;
+    //前指针
+    private DuLNode  prior;
+    //后指针
+    private DuLNode  next;
+
+    public T getDate() {
+        return date;
+    }
+
+    public void setDate(T date) {
+        this.date = date;
+    }
+
+    public DuLNode getPrior() {
+        return prior;
+    }
+
+    public void setPrior(DuLNode prior) {
+        this.prior = prior;
+    }
+
+    public DuLNode getNext() {
+        return next;
+    }
+
+    public void setNext(DuLNode next) {
+        this.next = next;
+    }
+}
+
+```
+>双向链表
+```$xslt
+
+package Impl;
+
+import IntefaceList.IList;
+import Node.DuLNode;
+
+public class DuLinkedList implements IList {
+
+    private DuLNode HeaderNode;
+    //当前节点
+    private DuLNode nowNode;
+
+
+    @Override
+    public void InitList() {
+        HeaderNode = new DuLNode();
+        HeaderNode.setNext(null);
+        HeaderNode.setPrior(null);
+    }
+
+    @Override
+    public void add(Object e) {
+        DuLNode newNode = new DuLNode();
+        newNode.setDate(e);
+        newNode.setNext(null);
+        nowNode = HeaderNode.getNext();
+        if (nowNode == null) {
+            HeaderNode.setNext(newNode);
+            newNode.setPrior(HeaderNode);
+            return;
+        }
+        while (nowNode.getNext() != null) {
+            nowNode = nowNode.getNext();
+        }
+        nowNode.setNext(newNode);
+        newNode.setPrior(nowNode);
+    }
+
+    @Override
+    public void ListTraverse() {
+        nowNode = HeaderNode.getNext();
+        if (nowNode == null) {
+            return;
+        }
+        while (nowNode != null) {
+            System.out.print(nowNode.getDate() + ",");
+            nowNode = nowNode.getNext();
+        }
+        System.out.println();
+    }
+
+    public void UnListTraverse() {
+        nowNode = HeaderNode.getNext();
+        if (nowNode == null) {
+            return;
+        }
+        while (nowNode.getNext() != null) {
+            nowNode = nowNode.getNext();
+        }
+
+        while (nowNode.getPrior() != HeaderNode) {
+            System.out.print(nowNode.getDate() + ",");
+            nowNode = nowNode.getPrior();
+        }
+        System.out.print(nowNode.getDate() + ",");
+        System.out.println();
+
+
+    }
+
+
+    @Override
+    public Object GetElem(Integer i) {
+        nowNode = HeaderNode.getNext();
+        if (i == 1) {
+            return nowNode.getDate();
+        }
+        for (int j = 2; j <= i; j++) {
+            nowNode = nowNode.getNext();
+        }
+
+        return nowNode.getDate();
+    }
+
+    @Override
+    public Integer LocateElem(Object e) {
+        nowNode = HeaderNode.getNext();
+        int i = 1;
+        while (!e.equals(nowNode.getDate())) {
+            nowNode = nowNode.getNext();
+            i++;
+        }
+
+        return i;
+    }
+
+    @Override
+    public Object PriorElem(Object e) {
+        nowNode = HeaderNode.getNext();
+        while (!e.equals(nowNode.getDate())) {
+            nowNode=nowNode.getNext();
+        }
+
+        return nowNode.getPrior().getDate();
+    }
+
+    @Override
+    public Object NextElem(Object e) {
+        nowNode = HeaderNode.getNext();
+        while (!e.equals(nowNode.getDate())) {
+            nowNode=nowNode.getNext();
+        }
+        return nowNode.getNext().getDate();
+    }
+
+    @Override
+    public IList ListInsert(Integer i, Object e) {
+        DuLNode newNode=new DuLNode();
+        newNode.setDate(e);
+        nowNode=HeaderNode.getNext();
+        if (i==1){
+            newNode.setPrior(HeaderNode);
+            newNode.setNext(nowNode);
+            nowNode.setPrior(newNode);
+
+            HeaderNode.setNext(newNode);
+            return this;
+        }
+
+        for (int j=2;j<i;j++){
+            nowNode=nowNode.getNext();
+        }
+        newNode.setNext(nowNode.getNext());
+        nowNode.getNext().setPrior(newNode);
+        newNode.setPrior(nowNode);
+        nowNode.setNext(newNode);
+
+
+
+        return this;
+    }
+
+    @Override
+    public IList ListDelete(Integer i) {
+        nowNode=HeaderNode.getNext();
+        if (i==1){
+            HeaderNode.getNext().getNext().setPrior(HeaderNode);
+            HeaderNode.setNext(HeaderNode.getNext().getNext());
+            return null;
+        }
+
+        for (int j = 2; j <i ; j++) {
+            nowNode=nowNode.getNext();
+        }
+        nowNode.getNext().getNext().setPrior(nowNode);
+
+        nowNode.setNext(nowNode.getNext().getNext());
+
+
+        return this;
+    }
+
+
+    @Override
+    public IList DestroyList() {
+        return null;
+    }
+
+    @Override
+    public IList ClearList() {
+        return null;
+    }
+
+    @Override
+    public Boolean ListEmpty() {
+        return null;
+    }
+
+    @Override
+    public Integer ListLength() {
+        return null;
+    }
+
+
+    @Override
+    public IList Union(IList list) {
+        return null;
+    }
+
+    @Override
+    public IList MergeList(IList list) {
+        return null;
+    }
+
+
+}
+
+```
+
+* 循环链表的实现
+
+```$xslt
+package Impl;
+
+import IntefaceList.IList;
+import Node.LNode;
+
+//循环链表
+public class CircLinkedList<T> implements IList {
+    /**
+     * 循环链表是另一种形式的链式存储结构 它的特点是表中最后一个节点的指针 指向头节点
+     * 整个链表形成一个环，从表中任意节点出发均可找到表中其他节点
+     * <p>
+     * 循环链表为空表的判断：头节点的指针指向头节点
+     * 循环链表的操作和线性链表基本一致，差别仅在于算法中的循环条件不是p或者p->next是否为空
+     * 而且它们是否等于头节点
+     */
+
+    //头节点
+    private LNode<T> HeaderNode;
+    //长度
+    private Integer Length;
+
+    //当前节点
+    private LNode<T> nowNode;
+
+
+    @Override
+    public void InitList() {
+        HeaderNode = new LNode<>();
+        //循环链表
+        HeaderNode.setNext(HeaderNode);
+        Length = 0;
+        //千万不要TailNode=HeaderNode  这样，因为java对象传递的是引用（地址）  会导致tailNode和HeaderNode都是同一个对象
+
+    }
+
+    @Override
+    public IList DestroyList() {
+        return null;
+    }
+
+    @Override
+    public IList ClearList() {
+        return null;
+    }
+
+    @Override
+    public Boolean ListEmpty() {
+        return null;
+    }
+
+    @Override
+    public Integer ListLength() {
+        return this.Length;
+    }
+
+    @Override
+    public Object GetElem(Integer i) {
+
+        nowNode = HeaderNode.getNext();
+
+        int j = 1;
+        while (nowNode != HeaderNode) {
+            if (j == i) {
+                return nowNode.getData();
+            } else {
+                nowNode = nowNode.getNext();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Integer LocateElem(Object e) {
+        nowNode = HeaderNode.getNext();
+        int i = 1;
+        while (nowNode != HeaderNode) {
+            if (nowNode.getData().equals(e)) {
+                return i;
+            }
+            i++;
+            nowNode = nowNode.getNext();
+        }
+        return -1;
+    }
+
+
+    @Override
+    public void add(Object e) {
+
+        LNode NewNode = new LNode();
+        NewNode.setData(e);
+        NewNode.setNext(HeaderNode);
+
+        //判断是不是第一个节点
+        nowNode = HeaderNode.getNext();
+        if (nowNode == HeaderNode) {
+            //说明是第一个节点
+            HeaderNode.setNext(NewNode);
+            return;
+        }
+
+        while (nowNode.getNext() != HeaderNode){
+            nowNode = nowNode.getNext();
+        }
+
+        nowNode.setNext(NewNode);
+
+
+        Length++;
+    }
+
+    @Override
+    public IList ListInsert(Integer i, Object e) {
+        LNode newNode = new LNode();
+        newNode.setData(e);
+        nowNode = HeaderNode.getNext();
+        if (i==1){
+            HeaderNode.setNext(newNode);
+            newNode.setNext(nowNode);
+            return this;
+        }
+
+        for (int j = 2; j < i; j++) {
+            nowNode = nowNode.getNext();
+        }
+
+        newNode.setNext(nowNode.getNext());
+        nowNode.setNext(newNode);
+
+        Length++;
+        return this;
+    }
+
+    @Override
+    public IList ListDelete(Integer i) {
+
+        nowNode = HeaderNode.getNext();
+        for (int j = 2; j < i; j++) {
+            nowNode = nowNode.getNext();
+        }
+        nowNode.setNext(nowNode.getNext().getNext());
+
+        return this;
+    }
+
+    @Override
+    public void ListTraverse() {
+        nowNode = HeaderNode.getNext();
+        while (nowNode != HeaderNode) {
+            System.out.print(nowNode.getData() + ",");
+            nowNode=nowNode.getNext();
+        }
+
+        System.out.println();
+
+    }
+
+
+    @Override
+    public Object PriorElem(Object e) {
+        return null;
+    }
+
+    @Override
+    public Object NextElem(Object e) {
+        return null;
+    }
+
+
+    @Override
+    public IList Union(IList list) {
+        return null;
+    }
+
+    @Override
+    public IList MergeList(IList list) {
+        return null;
+    }
+
+
+}
+```
+
+
+
+
+### `stack`栈
   * 栈应用之行编辑器  
   '#'表示退格 '@'表示退行  
   比如  whli##ilr#e（s#*s）  
