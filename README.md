@@ -19,6 +19,10 @@
          * [迷宫求解](#迷宫求解)
          * [表达式求值](#表达式求值)
          * [汉诺塔问题](#汉诺塔问题)
+         * [队列的接口和元素节点](#队列的接口和元素节点)
+         * [java队列的链表实现](#java队列的链表实现)
+         * [java数组队列的实现](#java数组队列的实现)
+         * [java循环队列的实现](#java循环队列的实现)
       * [tree  树](#tree--树)
       * [diagram 图](#diagram-图)
       * [sorting 排序查找](#sorting-排序查找)
@@ -1896,6 +1900,485 @@ ps:汉诺塔问题的数学递归式子得到的时间复杂度为
 2.`move(char a,  char b, int n)`这个方法的目的是，从a柱子上将编号为n的圆盘移动到b柱子上。参数含义为，a为起始柱子，b为目标柱子，n为圆盘编号*
 
 ***
+### 队列的接口和元素节点
+```
+package Interface;
+
+/**
+ * 队列接口
+ * <p>
+ * 队列是一种先进先出的线性表
+ * 只能在表的一端进行插入，另一段进行删除
+ * 允许插入的一端叫队尾，允许删除的一端叫队头（）
+ *
+ *
+ * ps:还存在一种 双端队列 即队头和队尾都可以进行插入和删除的操作，队头和队尾在这里叫端点
+ * 以及输入受限的双端队列（一端输入和删除，另一端只能删除）
+ * 输出受限的双端队列（一端输入和删除，另一端只能输入）
+ * 但是双端队列应用不广泛 不在此做讨论
+ */
+public interface IQueue<T> {
+
+    /**
+     * 初始化队列 构造一个空队列
+     */
+    IQueue InitQueue();
+
+    /**
+     * 销毁队列
+     */
+    IQueue DestroyQueue();
+
+    /**
+     * 清空队列
+     */
+    IQueue ClearQueue();
+
+    /**
+     * 队列判空
+     */
+    Boolean isEmpty();
+
+    /**
+     * 返回队列长度
+     */
+    Integer QueueLength();
+
+    /**
+     * 返回队列头元素
+     */
+    T GetHead();
+
+    /**
+     * 插入队尾元素
+     */
+    Boolean EnQueue(T e);
+
+    /**
+     * 删除队头元素  即出队
+     */
+    T DeQueue();
+
+}
+```
+
+####节点
+```
+package Interface;
+
+public class LNode<T> {
+    private T data;
+    private LNode next;
+
+    public LNode() {
+
+    }
+
+    public LNode(T data, LNode next) {
+        this.data = data;
+        this.next = next;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public LNode getNext() {
+        return next;
+    }
+
+    public void setNext(LNode next) {
+        this.next = next;
+    }
+}
+
+```
+### java队列的链表实现
+```
+package impl;
+
+import Interface.IQueue;
+import Interface.LNode;
+
+import java.util.LinkedList;
+
+/**
+ * 链队列
+ * <p>
+ * 链队列中 需要有队头和队尾指针，且为了表示方便 这里添加一个头节点
+ * 因此链队列判空的条件为 队头和队尾指针均指向头节点
+ * 链队列的操作即是单链表的插入和删除操作的特殊情况
+ *
+ * @param <T>
+ */
+public class LinkedQueue<T> implements IQueue {
+
+
+    private LNode Header;//头指针 指向头节点  即队首元素的前一个位置 （作用 方便删除队首元素，方便判断队列是否满）
+    private LNode TaillPoint;//尾指针
+    private Integer size;
+
+    public IQueue InitQueue() {
+        if (Header == null) {
+            Header = new LNode<T>(); //实例化头节点
+            //头尾指针均指向头节点
+            TaillPoint = Header;
+            size = 0;
+        }
+        return this;
+    }
+
+    public IQueue DestroyQueue() {
+        //销毁
+        Header = null;
+        TaillPoint = Header;
+        size = 0;
+        return this;
+    }
+
+    public IQueue ClearQueue() {
+        //头尾指针均指向头节点
+        TaillPoint = Header;
+        size = 0;
+        return this;
+    }
+
+    public Boolean isEmpty() {
+        if (TaillPoint == Header) {
+            return Boolean.TRUE;
+        } else {
+            return Boolean.FALSE;
+        }
+    }
+
+    public Integer QueueLength() {
+        return size;
+    }
+
+    public T GetHead() {
+        return (T) Header.getNext().getData();
+    }
+
+    public Boolean EnQueue(Object e) {
+        //入队 从队尾入
+        LNode newNode = new LNode<T>((T) e, null);
+        TaillPoint.setNext(newNode);
+        TaillPoint = newNode;
+        size++;
+        return Boolean.TRUE;
+    }
+
+    public T DeQueue() {
+        //删除的时候 如果是最后一个元素, 这个时候尾指针需要调整为指向头节点。 ps:至始至终 头节点本身不需要变，但是头节点指向的next指针要变
+        if (Header.getNext().getNext()==null ) {
+            T e = (T) Header.getNext().getData();
+            Header.setNext(null);
+            TaillPoint = Header;
+            return e;
+        }
+        T e = (T) Header.getNext().getData();
+        Header.setNext(Header.getNext().getNext());
+        size--;
+        return e;
+    }
+
+
+    public static void main(String[] args) {
+        LinkedQueue<Integer> linkedQueue = new LinkedQueue<Integer>();
+        linkedQueue.InitQueue();
+        linkedQueue.EnQueue(1);
+        linkedQueue.EnQueue(2);
+        linkedQueue.EnQueue(3);
+        Integer s = linkedQueue.size;
+        System.out.println(linkedQueue.GetHead());
+        for (Integer integer = 0; integer < s; integer++) {
+            System.out.println(linkedQueue.DeQueue());
+        }
+        System.out.println(linkedQueue.isEmpty());
+    }
+}
+```
+>输出结果：  
+1  
+1  
+2  
+3  
+true
+
+***
+### java数组队列的实现
+
+```
+package impl;
+
+import Interface.IQueue;
+
+/**
+ * 数组型队列
+ * <p>
+ * 同样需要一个头指针，一个尾指针  当头指针=尾指针=0时候为空
+ * 需要实现分配一个固定大小的数组
+ * 正常情况下下，尾指针永远指向队尾元素的下一个位置，比如说队尾元素在0 尾指针则在1
+ * <p>
+ * 注意！：数组型队列有很大的劣势，容易造成存储空间浪费，而且不易扩容。
+ * 比如说，最大空间为6的数组队列， 进去了6个了元素，然后从队头出去了5个元素，此时，仍然不能插入新的元素
+ * 因为队尾指针仍然指向第6个元素，其仍然占据了最后一个位置，而队头是不允许插入的。这样造成前面5个位置浪费。
+ * <p>
+ * 解决方法：1.元素移动位置，出队一个 后面的元素往前挪。   缺点：每次出队都需要移动位置 很麻烦 效率也低
+ * 2.动态扩容，  缺点：浪费了前面的空间
+ * 3.最佳解决方案：构造环形队列
+ */
+public class ArrayQueue<T> implements IQueue {
+    private Integer size;
+    private Integer header;
+    private Integer tail;
+    private final Integer length = 6;
+    private Object[] arr;
+
+    public IQueue InitQueue() {
+        arr = new Object[length];
+        tail = header = size = 0;
+        return this;
+    }
+
+    public IQueue DestroyQueue() {
+        arr = null;
+        tail = header = size = 0;
+        return this;
+    }
+
+    public IQueue ClearQueue() {
+        tail = header = size = 0;
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = null;
+        }
+        return this;
+    }
+
+    public Boolean isEmpty() {
+        if (tail == header) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+
+    public Integer QueueLength() {
+        return size;
+    }
+
+    public Object GetHead() {
+        return arr[header];
+    }
+
+    public Boolean EnQueue(Object e) {
+        if (size >= length) {
+            return Boolean.FALSE;
+        }
+
+        if (header == tail) {//先判断是不是空的 如果是 重置头尾指针  ,不然这个队列就只能用一次了
+            header = 0;
+            arr[header] = e;
+            tail = 1;
+            size++;
+            return Boolean.TRUE;
+        } else {
+            arr[tail] = e;
+            tail = tail + 1;
+            size++;
+            return Boolean.TRUE;
+        }
+
+
+    }
+
+    public Object DeQueue() {
+        if (header == tail) {
+            return null;
+        }
+        T e = (T) arr[header];
+        header = header + 1;
+        size--;
+        return e;
+    }
+
+
+    public static void main(String[] args) {
+        ArrayQueue<Integer> arrayQueue = new ArrayQueue<Integer>();
+        arrayQueue.InitQueue();
+        arrayQueue.EnQueue(1);
+        arrayQueue.EnQueue(2);
+        arrayQueue.EnQueue(3);
+        arrayQueue.EnQueue(4);
+        arrayQueue.EnQueue(5);
+        arrayQueue.EnQueue(6);
+        Integer s = arrayQueue.size;
+        System.out.println(arrayQueue.GetHead());
+        for (Integer integer = 0; integer < s; integer++) {
+            System.out.println(arrayQueue.DeQueue());
+        }
+        System.out.println(arrayQueue.isEmpty());
+        arrayQueue.EnQueue(1);
+        arrayQueue.EnQueue(2);
+        arrayQueue.EnQueue(3);
+        arrayQueue.EnQueue(4);
+         s = arrayQueue.size;
+        for (Integer integer = 0; integer < s; integer++) {
+            System.out.println(arrayQueue.DeQueue());
+        }
+        System.out.println(arrayQueue.isEmpty());
+    }
+}
+
+```
+
+>输出结果  
+1  
+1  
+2  
+3  
+4  
+5  
+6  
+true  
+1  
+2  
+3  
+4  
+true
+
+***
+
+### java循环队列的实现
+```
+package impl;
+
+import Interface.IQueue;
+
+/**
+ * 循环队列
+ * <p>
+ * 注意：判空和判满的两种情况：
+ * 情况1.另设一个标识位区别队列是空还是满
+ * 情况2.少用一个元素空间，约定以"队列头指针在队尾指针的下一位位置上" 作为队列满的标志
+ *
+ * @param <T>
+ */
+
+public class CycQueue<T> implements IQueue {
+
+    private Integer MAXSIZE = 6; //循环队列最大长度为7  0~6
+    private Object[] arr;
+    private Integer front;//头指针，若队列不为空，指向队头元素
+    private Integer rear; //尾指针，若队列不为空，指向队列尾元素的下一个位置
+
+    public IQueue InitQueue() {
+        arr = new Object[MAXSIZE];
+        front = rear = 0;
+        return this;
+    }
+
+    public IQueue DestroyQueue() {
+        arr = null;
+        rear = front = 0;
+        return this;
+    }
+
+    public IQueue ClearQueue() {
+        rear = front = 0;
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = null;
+        }
+        return this;
+    }
+
+    public Boolean isEmpty() {
+        if (front == rear) {
+            return Boolean.TRUE;
+        } else {
+            return Boolean.FALSE;
+        }
+    }
+
+    public Integer QueueLength() {
+        return (rear - front + MAXSIZE) % MAXSIZE; //求环形队列的元素个数
+    }
+
+    public Object GetHead() {
+        return arr[front];
+    }
+
+    //入队前判满
+    public Boolean EnQueue(Object e) {
+        //队列头指针在队尾指针的下一位位置上  说明满了
+        if ((rear + 1) % MAXSIZE == front) {
+            return Boolean.FALSE;
+        }
+        arr[rear] = e;
+        rear = (rear + 1) % MAXSIZE;
+        return Boolean.TRUE;
+    }
+
+    //出队前判空
+    public Object DeQueue() {
+        if (rear == front) {
+            return null;
+        }
+        T e = (T) arr[front];
+        front = (front + 1) % MAXSIZE;
+        return e;
+    }
+
+
+    public static void main(String[] args) {
+        CycQueue<Integer> cycQueue = new CycQueue<Integer>();
+        cycQueue.InitQueue();
+        cycQueue.EnQueue(1);
+        cycQueue.EnQueue(2);
+        cycQueue.EnQueue(3);
+        cycQueue.EnQueue(4);
+        cycQueue.EnQueue(5);
+        cycQueue.EnQueue(6);
+
+        Integer s = cycQueue.QueueLength();
+        System.out.println(cycQueue.GetHead());
+        for (Integer integer = 0; integer < s; integer++) {
+            System.out.println(cycQueue.DeQueue());
+        }
+        System.out.println(cycQueue.isEmpty());
+
+        cycQueue.EnQueue(4);
+        cycQueue.EnQueue(5);
+        cycQueue.EnQueue(6);
+        s = cycQueue.QueueLength();
+        for (Integer integer = 0; integer < s; integer++) {
+            System.out.println(cycQueue.DeQueue());
+        }
+        System.out.println(cycQueue.isEmpty());
+
+    }
+}
+
+```
+
+>输出结果
+1  
+1  
+2  
+3  
+4  
+5  
+true  
+4  
+5  
+6  
+true
+
+***
+
 
 ## `tree`  树
 ## `diagram` 图
