@@ -93,7 +93,8 @@ public class quick_sort {
         while (left != right) {  //57, 75, 52, 50
 
             //右边元素大于基准值 右指针左移
-            while (left < right && arr.get(right) >= pivot) {  //todo 万分注意！ 先移动右边的哨兵 不然结果是错的！
+            while (left < right && arr.get(right) >= pivot) {
+                // 万分注意！ 先移动右边的哨兵 不然结果是错的！ 因为右边先走，那么坑必然在左边
                 right--;
             }
 

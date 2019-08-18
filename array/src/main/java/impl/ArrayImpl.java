@@ -4,7 +4,6 @@ import inteface.IArray;
 
 public class ArrayImpl implements IArray {
 
-
     public void InitArray(int dim, int... lenths) {
 
     }
