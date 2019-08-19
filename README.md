@@ -3353,5 +3353,8 @@ public class StringKMP {
 ```
 
 ## `tree`  树
+
+树
+
 ## `diagram` 图
 ## `sorting` 排序查找
