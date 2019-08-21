@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 /**
@@ -15,6 +16,7 @@ public class TreeDemo {
         private Integer data;
         private TreeNode leftChild;
         private TreeNode rightChild;
+
 
         public TreeNode(Integer data) {
             this.data = data;
@@ -145,7 +147,7 @@ public class TreeDemo {
 
 
     /**
-     * 栈后序遍历
+     * todo  待定栈后序遍历
      *
      * @param node
      */
@@ -156,7 +158,7 @@ public class TreeDemo {
             //左右中
             while (node != null) {
                 if (node != lastNode) {
-                    System.out.println("将node放到push:"+node.data);
+                    System.out.println("将node放到push:" + node.data);
                     stack.push(node);
                 }
                 node = node.leftChild;
@@ -164,13 +166,36 @@ public class TreeDemo {
 
             if (!stack.isEmpty()) {
                 node = stack.pop();
-                System.out.println("将node Pop:"+node.data);
-                if (node.rightChild == null||lastNode==node.rightChild) {
-                    System.out.print("node左节点为空:"+node.data);
+                System.out.println("将node Pop:" + node.data);
+                if (lastNode == node.rightChild) {
+                    System.out.print("node左节点为空:" + node.data);
                     lastNode = node;
                 } else {
                     node = node.rightChild;
                 }
+            }
+        }
+    }
+
+
+    /**
+     * 二叉树 层次遍历
+     *
+     * @param root
+     */
+    public static void levelOrder(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            System.out.print(node.data);
+            if (node.leftChild != null) {
+                queue.offer(node.leftChild);
+            }
+
+            if (node.rightChild != null) {
+                queue.offer(node.rightChild);
+
             }
         }
 
@@ -198,7 +223,9 @@ public class TreeDemo {
         TreeDemo.postOrder(t);
         System.out.println("后序遍历");
         postStackOrder(t);
-        System.out.println("栈后序遍历");
+        levelOrder(t);
+        System.out.println("层次遍历");
+        //todo 有问题 System.out.println("栈后序遍历");
     }
 
 }
