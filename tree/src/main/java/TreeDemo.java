@@ -202,11 +202,45 @@ public class TreeDemo {
     }
 
 
+    /**
+     * 二叉树 层次遍历 知道自己遍历的层数
+     * <p>
+     * 思路：采取使用一个记录每层个数的一个值来判断什么时候完成遍历的。
+     * 我们首先就应该在循环外面把根节点放入队列，然后用此时队列的大小做循环取数，并将子节点放到队列里面
+     * 循环完之后，一层也就结束了，此时该层所有子节点也都入队了，更新下一层的每层个数
+     *
+     *
+     * @param root
+     */
+    public static void levelOrderCount(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        int n = queue.size();
+        while (!queue.isEmpty()) {
+
+            for (int i = 0; i < n; i++) {
+                TreeNode node = queue.poll();
+                System.out.print(node.data);
+                if (node.leftChild != null) {
+                    queue.offer(node.leftChild);
+                }
+
+                if (node.rightChild != null) {
+                    queue.offer(node.rightChild);
+                }
+            }
+            System.out.println("一层结束");
+            n = queue.size();
+        }
+
+    }
+
+
     public static void main(String[] args) {
 
-        //        LinkedList<Integer> linkedList = new LinkedList<Integer>(
-        //                Arrays.asList(new Integer[]{3, 2, 9, null, null, 10, null, null, 8, null, 4}));
-        LinkedList<Integer> linkedList = new LinkedList<Integer>(Arrays.asList(new Integer[]{1, 2, null, null, 3}));
+                LinkedList<Integer> linkedList = new LinkedList<Integer>(
+                        Arrays.asList(new Integer[]{3, 2, 9, null, null, 10, null, null, 8, null, 4}));
+      //  LinkedList<Integer> linkedList = new LinkedList<Integer>(Arrays.asList(new Integer[]{1, 2, null, null, 3}));
 
         //1,2,3和1,2,null,3构建的二叉树 第一个是一个只有左节点的树
         //1, 2,null,null, 3 构建的才是 根节点是1，左节点是2 右节点是3
@@ -225,6 +259,8 @@ public class TreeDemo {
         postStackOrder(t);
         levelOrder(t);
         System.out.println("层次遍历");
+        levelOrderCount(t);
+        System.out.println("层次遍历知道自己的层数");
         //todo 有问题 System.out.println("栈后序遍历");
     }
 
