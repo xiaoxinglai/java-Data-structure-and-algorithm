@@ -51,30 +51,6 @@ public class Heap {
     }
 
 
-    /**
-     * 注意！ 数组里面 存的时候 顺序和先序遍历什么的不一样 ，要按照左孩子的下标就是2xparent+1  右孩子就是2xparent+2 这样存
-     * 如果没有的，空都要空开，以符合这个条件方便查找
-     *链表的话则是用先序遍历的形式去存，且没有的节点用null表示
-     * @param args
-     */
-    public static void main(String[] args) {
-        int[] array = new int[]{7, 1, 3, 10, 5,2,8,9,6};
-        pre(array, 0);
-        System.out.println("前序遍历");
-        buildHeadp(array);
-        pre(array, 0);
-        System.out.println("构建成二叉堆，最小堆");
-
-
-
-        int[] array2 = new int[]{1, 3, 2, 6, 5,7,8,9,10};
-        pre(array2, 0);
-        System.out.println("前序遍历");
-        upAdjust(array2);
-        pre(array2, 0);
-        System.out.println("调整成二叉堆，最小堆");
-    }
-
 
     /**
      * 上浮调整
@@ -140,9 +116,67 @@ public class Heap {
             downAdjust(array,i,array.length);
         }
 
+    }
 
+
+
+
+    /**
+     * 注意！ 数组里面 存的时候 顺序和先序遍历什么的不一样 ，要按照左孩子的下标就是2xparent+1  右孩子就是2xparent+2 这样存
+     * 如果没有的，空都要空开，以符合这个条件方便查找
+     *链表的话则是用先序遍历的形式去存，且没有的节点用null表示
+     * @param args
+     */
+    public static void main(String[] args) {
+        int[] array = new int[]{7, 1, 3, 10, 5,2,8,9,6};
+        pre(array, 0);
+        System.out.println("前序遍历");
+        buildHeadp(array);
+        pre(array, 0);
+        System.out.println("构建成二叉堆，最小堆");
+
+        int[] array2 = new int[]{1, 3, 2, 6, 5,7,8,9,10};
+        pre(array2, 0);
+        System.out.println("前序遍历");
+        upAdjust(array2);
+        pre(array2, 0);
+        System.out.println("调整成二叉堆，最小堆");
+
+        HeapSort(array2);
+        for (int i : array2) {
+            System.out.print(i+" ");
+        }
 
     }
+
+
+
+
+    /**
+     * 堆排序
+     * 原理：大根堆 ，将堆顶元素和最后一个元素交换位置之后，进行下沉调整，会将第二大的元素设置为堆顶，
+     * 小根堆则是会将第二小的元素设置为堆顶
+     *
+     * 依据上述特性， 重复以上，直到数组元素都遍历过 ，最后得到的数组 就是一个排序的数组
+     *
+     * @param array 等待排序的数组（已经构建成堆）
+     */
+    public static void HeapSort(int[] array) {
+        int i=array.length-1;
+        while(i>=0){
+            int temp=array[0];
+            array[0]=array[i];
+            array[i]=temp;
+            downAdjust(array,0,i);
+            i--;
+        }
+    }
+
+
+
+
+
+
 
 
 }
